@@ -36,6 +36,7 @@ python3 -m venv .venv
 3. To run the project on your bot, you must also create an .env file in the root of the project, here is a template for this file:
 ```bash
 TOKEN="YOUR_TOKEN"
+DB_CONNECTION_STRING="YOUR_DB_CONNECTION_STRING"
 # Other settings
 ```
-4. Now you can run bot, for Windows just activate virtualenv and run src/main.py from python, in future updates I will write a .bat file for Windows. If your terminal is bash and you named virtualenv as .venv, you can run run.sh script in root, and bot will be started.
+4. Now we can run the bot, if your OS is Windows you can run the run.bat file or run.sh if you are in a Bash terminal (virtualenv must be named .venv otherwise the scripts will not run). Alternatively you can run the src/main.py file with virtualen activated
