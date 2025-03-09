@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher
 
-from handlers.user import start
+from handlers.user import start, commands, callbacks
 from middlewares import DatabaseMiddleware
 from utils.config import TOKEN
 
@@ -13,6 +13,9 @@ async def main():
 	bot = Bot(token=TOKEN)
 
 	dp.include_router(start.router)
+	dp.include_router(callbacks.router)
+	dp.include_router(commands.router)
+
 	dp.update.middleware(DatabaseMiddleware())
 
 	logging.basicConfig(level=logging.DEBUG)
