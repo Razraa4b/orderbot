@@ -1,6 +1,6 @@
 from aiogram import Bot, Dispatcher
 
-from handlers import start
+from handlers.user import start
 from middlewares import DatabaseMiddleware
 from utils.config import TOKEN
 
