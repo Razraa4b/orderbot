@@ -1,6 +1,7 @@
-from typing import Any, Sequence, Optional
+from typing import Any, Sequence, Optional, List
 
 from sqlalchemy import select, delete, update
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession, 
                                    async_sessionmaker, create_async_engine)
 from .base import Base
@@ -38,15 +39,19 @@ class DatabaseContext:
             session.add(entity)
             await session.commit()
 
-    async def get(self, entity_type: type, condition: Any) -> Optional[Base]:
+    async def get(self, entity_type: type, condition: Any, relationships: List[Any] = []) -> Optional[Base]:
         query = select(entity_type).where(condition)
+        if relationships:
+            query = query.options(*[joinedload(rel) for rel in relationships])
         async with self.session_maker() as session:
             result = await session.execute(query)
             entity = result.scalars().first()
             return entity
         
-    async def get_all(self, entity_type: type, condition: Any) -> Sequence[Base]:
+    async def get_all(self, entity_type: type, condition: Any, relationships: List[Any] = []) -> Sequence[Base]:
         query = select(entity_type).where(condition)
+        if relationships:
+            query = query.options(*[joinedload(rel) for rel in relationships])
         async with self.session_maker() as session:
             result = await session.execute(query)
             entity = result.scalars().all()

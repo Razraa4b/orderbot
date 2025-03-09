@@ -14,6 +14,6 @@ class UserBotSettings(Base):
     __tablename__ = "UserBotSettings"
     id: Mapped[int] = mapped_column(Integer(), primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(Integer(), ForeignKey("Users.id", ondelete="CASCADE"))
-    is_enable: Mapped[bool] = mapped_column(Boolean(), default=True)
+    is_active: Mapped[bool] = mapped_column(Boolean(), default=True)
     mail_interval: Mapped[int] = mapped_column(Integer(), default=60)
     user: Mapped["User"] = relationship(back_populates="bot_settings", single_parent=True)
