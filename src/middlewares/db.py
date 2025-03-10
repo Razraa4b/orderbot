@@ -1,9 +1,11 @@
 from typing import Callable, Dict, Any, Awaitable
+
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
 from services.database import DatabaseContext
 from utils.config import DB_CONNECTION_STRING
+
 
 class DatabaseMiddleware(BaseMiddleware):
     def __init__(self):

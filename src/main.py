@@ -1,22 +1,34 @@
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.redis import RedisStorage
 
-from handlers.user import start, commands, callbacks
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+from services.database import DatabaseContext
+from services.parsing.parsers import FreelanceruParser
+
+from handlers.user import start, commands, callbacks, mail
 from middlewares import DatabaseMiddleware
-from utils.config import TOKEN
+from utils.config import TOKEN, DB_CONNECTION_STRING
 
 import asyncio
 import logging
 
 
 async def main():
-	dp = Dispatcher()
+	dp = Dispatcher(storage=RedisStorage.from_url("redis://localhost:6379/0"))
 	bot = Bot(token=TOKEN)
-
+	scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
+	
 	dp.include_router(start.router)
 	dp.include_router(callbacks.router)
 	dp.include_router(commands.router)
 
 	dp.update.middleware(DatabaseMiddleware())
+
+	scheduler.add_job(mail.send_mail, trigger="interval", seconds=10, kwargs={ "bot": bot,
+																		   	   "parser": FreelanceruParser(),
+																		   	   "context": await DatabaseContext.create(DB_CONNECTION_STRING) })
+	scheduler.start()
 
 	logging.basicConfig(level=logging.DEBUG)
 	await dp.start_polling(bot)
