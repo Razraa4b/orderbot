@@ -37,6 +37,7 @@ python3 -m venv .venv
 ```bash
 TOKEN="YOUR_TOKEN"
 DB_CONNECTION_STRING="YOUR_DB_CONNECTION_STRING"
+REDIS_URL="YOUR_REDIS_URL"
 # Other settings
 ```
 4. Now we can run the bot, if your OS is Windows you can run the run.bat file or run.sh if you are in a Bash terminal (virtualenv must be named .venv otherwise the scripts will not run). Alternatively you can run the src/main.py file with virtualen activated

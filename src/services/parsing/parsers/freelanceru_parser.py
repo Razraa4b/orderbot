@@ -15,22 +15,19 @@ class FreelanceruParser(Parser):
                 content = await response.text()
                 soup = BeautifulSoup(content, features="lxml")
 
-                order_elements = soup.find_all("div", class_="project")
+                order_elements = soup.select('div.project:not(.highlight)')
                 orders = []
                 for element in order_elements:
-                    title = element.find("h2", class_="title")["title"].strip()
-                    link = "https://freelance.ru" + element.find("a")["href"]
-                    description = element.find("a", class_="description").get_text().strip()
-                    publish_time_str = element.find(class_="publish-time")["title"].strip()
-
-                    publish_time = None
                     try:
+                        title = element.find("h2", class_="title")["title"].strip()
+                        link = "https://freelance.ru" + element.find("a")["href"]
+                        description = element.find("a", class_="description").get_text().strip()
+                        publish_time_str = element.find(class_="publish-time")["title"].strip()
+
                         publish_time = datetime.strptime(publish_time_str, "%Y-%m-%d в %H:%M")
-                    except ValueError:
-                        print("Ошибка: Неправильный формат даты.")
-                        exit(-1)
-                    finally:
-                        orders.append(Order(title, link, description, publish_time=publish_time))
+                        orders.append(Order(title, link, description, publish_time))
+                    except:
+                        continue
 
                 return orders
 
